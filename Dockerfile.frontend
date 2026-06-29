@@ -1,0 +1,4 @@
+FROM docker.io/library/nginx:alpine
+RUN echo '<h1>Frontend operativo.</h1><p>Respuesta backend: <span id="backend-response">Cargando...</span></p><script>fetch("/api").then(r => r.text()).then(t => document.getElementById("backend-response").innerText = t).catch(e => document.getElementById("backend-response").innerText = "Error conectando al backend");</script>' > /usr/share/nginx/html/index.html
+RUN echo 'server { listen 8080; location / { root /usr/share/nginx/html; index index.html; } location /api { proxy_pass http://tienda-backend.user1.svc.cluster.local:80/; } }' > /etc/nginx/conf.d/default.conf
+EXPOSE 8080
